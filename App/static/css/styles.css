@@ -1,0 +1,29 @@
+.title {
+    margin: 10px;
+    text-align: center;
+}
+
+table,
+th,
+td {
+    border: 1px solid black;
+    padding: 1px;
+}
+
+input {
+    width: 50px;
+    height: 25px;
+}
+
+.tablehead {
+    background-color: black;
+    color: aliceblue;
+}
+
+tr {
+    background-color: red;
+}
+
+td {
+    color: aliceblue;
+}

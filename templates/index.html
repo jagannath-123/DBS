@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+    <title>Customer rating system</title>
+
+    <style>
+        .title {
+            margin: 10px;
+            text-align: center;
+        }
+        
+        .rules {}
+        
+        .rules table,
+        .rules th,
+        .rules td {
+            border: 1px solid black;
+            padding: 1px;
+        }
+        
+        input {
+            width: 50px;
+            height: 25px;
+        }
+        
+        .tablehead {
+            background-color: black;
+            color: aliceblue;
+        }
+        
+        .rules tr {
+            background-color: rgb(255, 80, 0);
+            color: white;
+        }
+        
+        .rules td {
+            color: black;
+        }
+        
+        .high {
+            background-color: rgb(251, 71, 0);
+        }
+        
+        .medium {
+            background-color: rgba(12, 152, 245, 0.397);
+        }
+        
+        .low {
+            background-color: yellow;
+            color: black;
+        }
+        
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body class="bg bg-dark">
+    <h2 class="container title text-light" style="padding-left: 150px">
+        Customer rating system
+    </h2>
+    <br /><br />
+    <div class="container">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <table class="rules text-light">
+                <tr>
+                    <th class="tablehead">HIGH RISK</th>
+                    <th class="tablehead">MEDIUM RISK</th>
+                    <th class="tablehead">LOW RISK</th>
+                </tr>
+                <tr>
+                    <td>
+                        H1: If there are more than
+                        <input type="text" id="H1" placeholder="value" value="{{rules.0.high_risk_end}}" />incoming or outgoing (INN | OUT) transaction in a month from high risk country.
+                    </td>
+                    <td>
+                        M1: If there are more than
+                        <input type="text" id="M1" placeholder="value" value="{{rules.0.medium_risk_start}}" />incoming or outgoing (INN | OUT) transaction in a month from high risk/Non-high risk country.
+                    </td>
+                    <td>
+                        L1: If there are less than
+                        <input type="text" id="L1" placeholder="value" value="{{rules.0.low_risk_end}}" />incoming or outgoing (INN | OUT) transaction in a month from Non-high-risk country. <span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        H2: If sum of all incoming(INN) transaction is more than
+                        <input type="text" id="H2" placeholder="value" value="{{rules.1.high_risk_end}}" />in a month.
+                    </td>
+                    <td>
+                        M2: If sum of all incoming(INN) transaction is more than
+                        <input type="text" id="M2" placeholder="value" value="{{rules.1.medium_risk_end}}" />and less than 1000$ in a month.
+                    </td>
+                    <td>
+                        L2: If sum of all incoming(INN) transaction is less than
+                        <input type="text" id="L2" placeholder="value" value="{{rules.1.low_risk_start}}" />in a month.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        H3: If sum of all outgoing (OUT) transaction is more than
+                        <input type="text" id="H3" placeholder="value" value="{{rules.2.high_risk_end}}" />in a month.
+                    </td>
+                    <td>
+                        M3: If sum of all outgoing (OUT) transaction is more than
+                        <input type="text" id="M3" placeholder="value" value="{{rules.2.medium_risk_end}}" />and less than 800$ in a month.
+                    </td>
+                    <td>
+                        L3: If sum of all outgoing (OUT) transaction is less than
+                        <input type="text" id="L3" placeholder="value" value="{{rules.2.low_risk_start}}" />in a month.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        H4: If number of transaction in a day is more than
+                        <input type="text" id="H4" placeholder="value" value="{{rules.3.high_risk_end}}" />.
+                    </td>
+                    <td>
+                        M4: If number of transaction in a day is more than
+                        <input type="text" id="M4" placeholder="value" value="{{rules.3.medium_risk_end}}" />but less than
+                        <input type="text" id="H1" placeholder="value" value="{{rules.3.medium_risk_start}}" />.
+                    </td>
+                    <td>
+                        L4:If number of transaction in a day is less than
+                        <input type="text" id="L4" placeholder="value" value="{{rules.3.low_risk_start}}" />.
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <br />
+        <button type="button" onclick=" updateClick() " class="btn btn-success">
+        Update
+      </button>
+    </div>
+    {% load static %}
+    <img src=" {% static 'countPlot.png' %} " alt="plot" class="center" />
+    <br /><br />
+    <div class="container">
+        <table class="table">
+            <tr class="border border-dark">
+                <th class="tablehead text-light border border-light">CusterId</th>
+                <th class="tablehead text-light border border-light">Country</th>
+                <th class="tablehead text-light border border-light">Risk Rating</th>
+                <th class="tablehead text-light border border-light">
+                    Risk Rating Reason
+                </th>
+            </tr>
+            {% for i in data %} {% if i.2 == "High" %}
+            <tr class="table-danger border border-dark">
+                {% elif i.2 == "Medium" %}
+            </tr>
+
+            <tr class="table-primary border border-dark">
+                {% else %}
+            </tr>
+
+            <tr class="table-warning border border-dark">
+                {% endif %}
+                <td class="border border-dark">{{i.0}}</td>
+                <td class="border border-dark">{{i.1}}</td>
+                <td class="border border-dark">{{i.2}}</td>
+                <td class="border border-dark">{{i.3}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    x
+    <p></p>
+
+    <script>
+        async function updateClick() {
+            console.log("hi ");
+            var H1 = document.getElementById("H1").value;
+            var H2 = document.getElementById("H2").value;
+            var H3 = document.getElementById("H3").value;
+            var H4 = document.getElementById("H4").value;
+            var M1 = document.getElementById("M1").value;
+            var M2 = document.getElementById("M2").value;
+            var M3 = document.getElementById("M3").value;
+            var M4 = document.getElementById("M4").value;
+            var L1 = document.getElementById("L1").value;
+            var L2 = document.getElementById("L2").value;
+            var L3 = document.getElementById("L3").value;
+            var L4 = document.getElementById("L4").value;
+
+            data = {
+                H1: H1,
+                H2: H2,
+                H3: H3,
+                H4: H4,
+                M1: M1,
+                M2: M2,
+                M3: M3,
+                M4: M4,
+                L1: L1,
+                L2: L2,
+                L3: L3,
+                L4: L4,
+            };
+            console.log(data);
+            let csrftoken = getCookie("csrftoken");
+
+            let response = await fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                    "X-CSRFToken": csrftoken,
+                },
+                body: JSON.stringify(data),
+            });
+            location.reload();
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                var cookies = document.cookie.split(";");
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === name + "=") {
+                        cookieValue = decodeURIComponent(
+                            cookie.substring(name.length + 1)
+                        );
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js " integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB " crossorigin="anonymous "></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js " integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13 " crossorigin="anonymous "></script>
+</body>
+
+</html>
